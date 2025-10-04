@@ -14,17 +14,17 @@
     "https://translate.googleapis.com/*"
   ],
   "background": {
-    "service_worker": "dist/background.js"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["dist/content.js"],
-      "css": ["dist/content.css"]
+      "js": ["content.js"],
+      "css": ["content.css"]
     }
   ],
   "action": {
-    "default_popup": "dist/src/popup/index.html",
+    "default_popup": "src/popup/index.html",
     "default_title": "Polyglot OCR",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -41,7 +41,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["dist/src/offscreen/offscreen.html"],
+      "resources": ["src/offscreen/offscreen.html"],
       "matches": ["http://*/*", "https://*/*"]
     }
   ],
