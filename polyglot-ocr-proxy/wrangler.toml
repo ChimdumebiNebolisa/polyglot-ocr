@@ -1,0 +1,8 @@
+name = "polyglot-ocr-proxy"
+main = "src/index.ts"        # Entry point is src/index.ts
+compatibility_date = "2025-10-03"
+
+# Optional: if you use Node.js APIs (fs, path, etc.)
+# compatibility_flags = ["nodejs_compat"]
+
+preview_urls = true

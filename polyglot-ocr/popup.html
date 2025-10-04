@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polyglot OCR</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    h1 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    p {
+      margin: 0 0 15px 0;
+      color: #666;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 10px;
+      padding: 8px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+  <h1>Polyglot OCR</h1>
+  <p>Real-time translation and OCR extension</p>
+  <button id="recordBtn">Record & Transcribe</button>
+  <div id="status">Click to record 5 seconds of audio</div>
+  
+  <script type="module">
+    import { transcribeAudio } from './dist/transcribeAudio.js';
+    window.transcribeAudio = transcribeAudio;
+    console.log('transcribeAudio imported:', typeof transcribeAudio);
+    
+    // Initialize popup after transcribeAudio is loaded
+    function init() {
+      console.log('=== POPUP INITIALIZATION ===');
+      console.log('Current URL:', window.location.href);
+      console.log('Document title:', document.title);
+      
+      const recordBtn = document.getElementById('recordBtn');
+      const statusDiv = document.getElementById('status');
+      
+      // Check if elements exist
+      if (!recordBtn) {
+        console.error('Record button not found!');
+        return;
+      }
+      
+      if (!statusDiv) {
+        console.error('Status div not found!');
+        return;
+      }
+      
+      console.log('Elements found:', { recordBtn, statusDiv });
+      
+      // Check if transcribeAudio function is available
+      if (typeof window.transcribeAudio !== 'function') {
+        console.error('transcribeAudio function not found!');
+        statusDiv.textContent = 'Error: transcribeAudio function not loaded';
+        return;
+      }
+      
+      console.log('transcribeAudio function found:', typeof window.transcribeAudio);
+      
+      recordBtn.addEventListener('click', async () => {
+        try {
+          // Update UI
+          recordBtn.disabled = true;
+          recordBtn.textContent = 'Recording...';
+          statusDiv.textContent = 'Recording audio for 5 seconds...';
+          
+          // Get audio stream
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const recorder = new MediaRecorder(stream);
+          let chunks = [];
+          
+          // Handle data available
+          recorder.ondataavailable = (e) => {
+            chunks.push(e.data);
+          };
+          
+          // Handle recording stop
+          recorder.onstop = async () => {
+            try {
+              // Stop all tracks
+              stream.getTracks().forEach(track => track.stop());
+              
+              // Create audio blob
+              const blob = new Blob(chunks, { type: "audio/wav" });
+              
+              // Update status
+              statusDiv.textContent = 'Transcribing audio...';
+              
+              // Transcribe audio
+              const text = await window.transcribeAudio(blob);
+              console.log("Transcript:", text);
+              
+              // Update UI
+              statusDiv.textContent = `Transcript: ${text}`;
+              recordBtn.textContent = 'Record & Transcribe';
+              recordBtn.disabled = false;
+              
+            } catch (err) {
+              console.error("Transcription failed:", err);
+              statusDiv.textContent = `Error: ${err.message}`;
+              recordBtn.textContent = 'Record & Transcribe';
+              recordBtn.disabled = false;
+            }
+          };
+          
+          // Start recording
+          recorder.start();
+          
+          // Auto-stop after 5 seconds
+          setTimeout(() => {
+            if (recorder.state === 'recording') {
+              recorder.stop();
+            }
+          }, 5000);
+          
+        } catch (err) {
+          console.error("Recording failed:", err);
+          statusDiv.textContent = `Error: ${err.message}`;
+          recordBtn.textContent = 'Record & Transcribe';
+          recordBtn.disabled = false;
+        }
+      });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
