@@ -75,20 +75,20 @@ polyglot-ocr/
 ### Installation
 
 1. Clone the repository:
-```bash
-git clone https://github.com/ChimdumebiNebolisa/polyglot-ocr.git
-cd polyglot-ocr
-```
+   ```bash
+   git clone https://github.com/ChimdumebiNebolisa/polyglot-ocr.git
+   cd polyglot-ocr
+   ```
 
 2. Install dependencies:
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Build the extension:
-```bash
-npm run build
-```
+   ```bash
+   npm run build
+   ```
 
 4. Load the extension in Chrome:  
    - Go to `chrome://extensions/`  
@@ -96,82 +96,90 @@ npm run build
    - Click **Load unpacked** and select the `dist` folder
 
 5. Run the Cloudflare Worker:
-```bash
-wrangler dev
-```
+   ```bash
+   wrangler dev
+   ```
 
 ---
 
-## RECRUITEMENT GATHERING (WHATEVER THAT MEANS)
+## 🧩 Analysis and Design
 
-- Identify common multilingual OCR use cases (e.g., academic papers, web screenshots, signs, notes).  
-- Define required features: OCR accuracy, translation speed, privacy.  
-- Specify performance expectations and limits (browser memory usage, latency).
-
----
-
-## ANALYSIS AND DESIGN
-
-- Designed for offline-first UX with minimal UI overhead.  
-- Chrome Extension interacts asynchronously with Cloudflare Worker API.  
-- Used background scripts for permissions, event listeners, and messaging.  
-- Defined modular architecture to allow future support for Firefox extensions.  
+- Built for **offline-first** performance and privacy, minimizing external API calls.  
+- Chrome Extension communicates asynchronously with the Cloudflare Worker backend via REST endpoints.  
+- Uses background scripts to handle permissions, image capture, and message passing.  
+- Modular structure allows reusability and scalability to Firefox or Edge.  
+- Designed with low-latency UI updates using React hooks and context for state management.
 
 ---
 
-## IMPLEMENTATION
+## ⚙️ Implementation
 
-- Integrated **Tesseract.js** for browser-based OCR.  
-- Deployed **Cloudflare Worker** to handle translation API calls.  
-- Configured API routes for Deepgram and translation endpoints.  
-- Used message passing between popup, content, and background scripts.  
-- Built responsive popup UI with Tailwind CSS + React.  
-
----
-
-## TESTING
-
-- Unit tests for translation and OCR utilities.  
-- Manual testing across Chrome, Edge, and Brave.  
-- Verified OCR accuracy for 10+ sample languages.  
-- Latency benchmarks under 1.2 seconds per request.  
+- Integrated **Tesseract.js** for client-side OCR.  
+- Developed a **Cloudflare Worker** backend for translation and optional speech synthesis.  
+- Connected **Deepgram API** for STT and translation via **OpenAI-compatible endpoints**.  
+- Used Chrome APIs for screen capture and message passing between popup, content, and background scripts.  
+- Built UI with **Tailwind CSS** and optimized with **Vite + Esbuild** for minimal bundle size.
 
 ---
 
-## DEPLOYMENT
+## 🧪 Testing
 
-- Worker deployed via `wrangler publish`.  
-- Chrome Extension packaged with build artifacts and manifest v3.  
-- Versioning handled through Git tags and release notes.  
-- Auto-deployment pipeline available for production builds.
+- Unit tests for OCR, translation, and message-passing utilities.  
+- Manual cross-browser tests on Chrome, Edge, and Brave.  
+- Verified OCR accuracy on diverse language scripts (Latin, Arabic, Chinese).  
+- Average OCR + translation latency under **1.2 seconds per request**.  
+- Regression testing for each release to ensure compatibility with latest Chrome versions.
 
 ---
 
-## MAINTENANCE
+## 🚀 Deployment
 
-- Scheduled dependency updates and security audits.  
-- Monitor Worker logs for API errors and downtime.  
-- Maintain documentation for new contributors.  
-- Regular testing of extension permissions and browser compatibility.  
+- Cloudflare Worker deployed via:
+  ```bash
+  wrangler publish
+  ```
+- Chrome Extension packaged using build artifacts and `manifest.json` (v3).  
+- Versioning handled with **Git tags** and release notes.  
+- Auto-deployment pipeline for Cloudflare Worker included in CI/CD workflow.  
+- Environment variables managed via Wrangler Secrets for API keys.
+
+---
+
+## 🧰 Maintenance
+
+- Monthly dependency updates using Dependabot or manual npm audits.  
+- Monitor Cloudflare Worker logs for API or translation errors.  
+- Routine review of Chrome Extension permissions and manifest updates.  
+- Update documentation for contributors and bug reporters.  
+- Performance re-testing after each major dependency upgrade.
 
 ---
 
 ## 📈 Roadmap
 
-- 🖼️ Add drag-and-drop OCR for entire webpages  
+- 🖼️ Add drag-and-drop OCR for full webpage screenshots  
 - 🗣️ Integrate multilingual speech synthesis  
-- 🔤 Improve OCR accuracy for non-Latin scripts  
-- 🧩 Firefox and Edge extension support  
-- 🧠 On-device translation model (experimental)  
+- 🔤 Improve OCR accuracy for complex scripts  
+- 🧩 Add Firefox and Edge extension support  
+- 🧠 On-device translation model (experimental)
 
 ---
 
 ## 🤝 Contributing
 
 1. Fork the repository  
-2. Create a feature branch (`git checkout -b feature/new-feature`)  
-3. Commit changes (`git commit -m "Add new OCR enhancement"`)  
-4. Push to your branch  
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+3. Commit changes:
+   ```bash
+   git commit -m "Add new OCR enhancement"
+   ```
+4. Push to your branch:
+   ```bash
+   git push origin feature/new-feature
+   ```
 5. Open a Pull Request  
 
 ---
