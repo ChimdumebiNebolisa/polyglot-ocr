@@ -195,4 +195,3 @@ This project is licensed under the **MIT License** — see the `LICENSE` file fo
 - Deepgram for free STT API access  
 - Tesseract.js contributors for open-source OCR engine  
 - Cloudflare Workers for serverless scalability  
-- Inspired by the idea of removing language barriers through open technology
